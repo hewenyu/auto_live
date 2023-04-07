@@ -146,29 +146,28 @@ if (window.location.href.indexOf('youtube.com') > -1) {
     const script = document.createElement('script');
     script.textContent = '(' + (token => {
         const origOpen = XMLHttpRequest.prototype.open;
-        const dispatch = data => window.dispatchEvent(new CustomEvent(token, {detail: data}));
+        // const dispatch = data => window.dispatchEvent(new CustomEvent(token, {detail: data}));
         const onLoad = e => {
-          const json = e.target.response;
-          const player = (Array.isArray(json) && json.find(_ => _.player) || {}).player || {};
-        //   dispatch(player.args);
-          console.log('player.args', player.args);
+            const json = e.target.response;
+            const player = (Array.isArray(json) && json.find(_ => _.player) || {}).player || {};
+            //   dispatch(player.args);
+            console.log('player.args', player.args.raw_player_response.streamingData.adaptiveFormats);
         };
-        // get the initial config
+        // 获取初始化数据
         try {
-          dispatch(window.ytplayer.config.args);
-        //   
+            var argsInfo = window.ytplayer.config.args
+            console.log('player.args', argsInfo);
         } catch (e) {}
-        // intercept the subsequent config queries
-        XMLHttpRequest.prototype.open = function (method, url) {
-          if (url.startsWith('https://www.youtube.com/watch?')) {
-            this.addEventListener('load', onLoad);
-          }
-          return origOpen.apply(this, arguments);
+            // 重载
+            XMLHttpRequest.prototype.open = function (method, url) {
+            if (url.startsWith('https://www.youtube.com/watch?')) {
+                this.addEventListener('load', onLoad);
+            }
+            return origOpen.apply(this, arguments);
         };
       }) + `)("${token}")`;
       document.documentElement.appendChild(script);
       script.remove();
-    
 }
 
     // var videoElement = getVideoElement();
