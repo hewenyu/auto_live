@@ -136,7 +136,7 @@ function getVideoTitle() {
 if (window.location.href.indexOf('youtube.com') > -1) {
     const token = chrome.runtime.id + ':' + performance.now() + ':' + Math.random();
     window.addEventListener(token, e => {
-        console.log('gotPlayerArgs', e.detail);
+        // console.log('gotPlayerArgs', e.detail);
         chrome.runtime.sendMessage({
             action: 'gotPlayerArgs',
             data: e.detail,
@@ -148,10 +148,10 @@ if (window.location.href.indexOf('youtube.com') > -1) {
         const origOpen = XMLHttpRequest.prototype.open;
         // const dispatch = data => window.dispatchEvent(new CustomEvent(token, {detail: data}));
         const onLoad = e => {
-            const json = e.target.response;
-            const player = (Array.isArray(json) && json.find(_ => _.player) || {}).player || {};
-            //   dispatch(player.args);
-            console.log('player.args', player.args.raw_player_response.streamingData.adaptiveFormats);
+              const json = e.target.response;
+              const player = (Array.isArray(json) && json.find(_ => _.player) || {}).player || {};
+                dispatch(player.args);
+              console.log('player.args', player.args.raw_player_response.streamingData.adaptiveFormats);
         };
         // 获取初始化数据
         try {
