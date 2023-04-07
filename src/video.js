@@ -136,7 +136,7 @@ function getVideoTitle() {
 if (window.location.href.indexOf('youtube.com') > -1) {
     const token = chrome.runtime.id + ':' + performance.now() + ':' + Math.random();
     window.addEventListener(token, e => {
-        console.log('gotPlayerArgs', e.detail);
+        // console.log('gotPlayerArgs', e.detail);
         chrome.runtime.sendMessage({
             action: 'gotPlayerArgs',
             data: e.detail,
@@ -148,26 +148,25 @@ if (window.location.href.indexOf('youtube.com') > -1) {
         const origOpen = XMLHttpRequest.prototype.open;
         const dispatch = data => window.dispatchEvent(new CustomEvent(token, {detail: data}));
         const onLoad = e => {
-          const json = e.target.response;
-          const player = (Array.isArray(json) && json.find(_ => _.player) || {}).player || {};
-        //   dispatch(player.args);
-          console.log('player.args', player.args);
+            const json = e.target.response;
+            const player = (Array.isArray(json) && json.find(_ => _.player) || {}).player || {};
+            dispatch(player.args);
+            console.log('player.args', player.args);
         };
         // get the initial config
         try {
-          dispatch(window.ytplayer.config.args);
-        //   
+            dispatch(window.ytplayer.config.args);   
         } catch (e) {}
-        // intercept the subsequent config queries
-        XMLHttpRequest.prototype.open = function (method, url) {
-          if (url.startsWith('https://www.youtube.com/watch?')) {
-            this.addEventListener('load', onLoad);
-          }
-          return origOpen.apply(this, arguments);
+            // intercept the subsequent config queries
+            XMLHttpRequest.prototype.open = function (method, url) {
+            if (url.startsWith('https://www.youtube.com/watch?')) {
+                this.addEventListener('load', onLoad);
+            }
+            return origOpen.apply(this, arguments);
         };
-      }) + `)("${token}")`;
-      document.documentElement.appendChild(script);
-      script.remove();
+    }) + `)("${token}")`;
+    document.documentElement.appendChild(script);
+    script.remove();
     
 }
 
