@@ -167,7 +167,6 @@ if (window.location.href.indexOf('youtube.com') > -1) {
     }) + `)("${token}")`;
     document.documentElement.appendChild(script);
     script.remove();
-    
 }
 
     // var videoElement = getVideoElement();
