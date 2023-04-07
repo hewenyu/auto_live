@@ -1,0 +1,21 @@
+{
+    "manifest_version": 2,
+    "name": "audio-info",
+    "version": "1.0",
+    "permissions": [
+        "https://www.youtube.com/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://www.youtube.com/*"
+            ],
+            "js": [
+                "video.js"
+            ]
+        }
+    ],
+    "browser_action": {
+        "default_popup": "popup.html"
+    }
+}
